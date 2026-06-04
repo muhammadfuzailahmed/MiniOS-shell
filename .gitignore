@@ -1,0 +1,26 @@
+# Visual Studio temporary files
+.vs/
+
+# Build output folders
+x64/
+x86/
+Debug/
+Release/
+
+# User-specific Visual Studio files
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+# Compiled files
+*.exe
+*.obj
+*.pdb
+*.ilk
+*.log
+*.tlog
+*.lastbuildstate
+
+# Cache files
+*.cache
