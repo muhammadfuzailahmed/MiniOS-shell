@@ -16,6 +16,48 @@ void showVersion() {
 	cout << "current version: " << "1.0.0.1" << endl;
 }
 
+void handleCalc() {
+	float num1;
+	string op;
+	float num2;
+	float result;
+
+	cout << "Enter first number: ";
+	cin >> num1;
+	cout << "operation: ";
+	cin >> op;
+	cout << "Enter second number: ";
+	cin >> num2;
+
+	if (op == "+") {
+		result = num1 + num2;
+		cout << "Result: " << result;
+		return;
+	} else if (op == "*") {
+		result = num1 * num2;
+		cout << "Result: " << result;
+		return;
+	}else if (op == "-") {
+		result = num1 - num2;
+		cout << "Result: " << result;
+		return;
+	}else if (op == "/") {
+		if (num2 == 0) {
+			cout << "cannot divide by zero" << endl;
+			return;
+		}
+		else {
+			result = num1 / num2;
+			cout << "Result: " << result;
+			return;
+		}
+	}
+	else {
+		cout << "Invalid inputs" << endl;
+		return;
+	}
+}
+
 void showInvalidCommand(string command) {
 	cout << "'" << command << "'" << " is not recognized as an internal or external command" << endl;
 }
@@ -30,6 +72,11 @@ void checkCommand(string command) {
 		showVersion();
 		cout << endl;
 	}
+	else if (command == "calc") {
+		handleCalc();
+		cin.ignore();
+		cout << endl;
+	}
 	else {
 		showInvalidCommand(command);
 		cout << endl;
@@ -41,9 +88,9 @@ int main()
 	cout << "====================================================================================================================================" << endl;
     cout << "\t\t\t\t\t\tMiniOS Shell" << endl;
 	cout << "====================================================================================================================================" << endl;
-	cout << endl;
 	cout << "Type 'help' to see available commands" << endl;
 	cout << "type 'exit' to exit MiniOS shell" << endl;
+	cout << endl;
 	string command;
 	do
 	{
@@ -54,6 +101,7 @@ int main()
 		}
 		else {
 			checkCommand(command);
+			cout << endl;
 		}
 	} while (command != "exit");
 }
