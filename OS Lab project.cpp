@@ -2,7 +2,10 @@
 #include<string>
 #include <cstdlib>
 #include <ctime>
+#include <filesystem>
 using namespace std;
+
+namespace fs = std::filesystem;
 
 string arr[] = { "help", "clear", "exit", "date", "time", "list", "create", "delete", "read", "write", "mkdir", "rmdir", "cd", "pwd", "echo", "find", "history", "calc", "sysinfo"
 			"version" };
@@ -65,6 +68,21 @@ void generateRandomNumber() {
 	cout << "Random Number: " << num << endl;
 }
 
+void handlemkdir(string command) {
+	string folderName = command.substr(6);
+
+	if (folderName == "") {
+		cout << "error: folder name is missing" << endl;
+	}
+	else if (fs::exists(folderName)) {
+		cout << "error: folder already exists with same name." << endl;
+	}
+	else {
+		fs::create_directory(folderName);
+		cout << "Folder created successfully!" << endl;
+	}
+}
+
 void showInvalidCommand(string command) {
 	cout << "'" << command << "'" << " is not recognized as an internal or external command" << endl;
 }
@@ -86,6 +104,10 @@ void checkCommand(string command) {
 	}
 	else if (command == "random") {
 		generateRandomNumber();
+		cout << endl;
+	}
+	else if (command.substr(0, 6) == "mkdir ") {
+		handlemkdir(command);
 		cout << endl;
 	}
 	else {
