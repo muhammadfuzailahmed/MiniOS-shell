@@ -1,5 +1,7 @@
 #include <iostream>
 #include<string>
+#include <cstdlib>
+#include <ctime>
 using namespace std;
 
 string arr[] = { "help", "clear", "exit", "date", "time", "list", "create", "delete", "read", "write", "mkdir", "rmdir", "cd", "pwd", "echo", "find", "history", "calc", "sysinfo"
@@ -58,6 +60,11 @@ void handleCalc() {
 	}
 }
 
+void generateRandomNumber() {
+	int num = rand() % 100 + 1;
+	cout << "Random Number: " << num << endl;
+}
+
 void showInvalidCommand(string command) {
 	cout << "'" << command << "'" << " is not recognized as an internal or external command" << endl;
 }
@@ -77,6 +84,10 @@ void checkCommand(string command) {
 		cin.ignore();
 		cout << endl;
 	}
+	else if (command == "random") {
+		generateRandomNumber();
+		cout << endl;
+	}
 	else {
 		showInvalidCommand(command);
 		cout << endl;
@@ -85,6 +96,7 @@ void checkCommand(string command) {
 
 int main()
 {
+	srand(time(0));
 	cout << "====================================================================================================================================" << endl;
     cout << "\t\t\t\t\t\tMiniOS Shell" << endl;
 	cout << "====================================================================================================================================" << endl;
@@ -101,7 +113,6 @@ int main()
 		}
 		else {
 			checkCommand(command);
-			cout << endl;
 		}
 	} while (command != "exit");
 }
