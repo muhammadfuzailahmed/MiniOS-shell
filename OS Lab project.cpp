@@ -10,7 +10,7 @@ using namespace std;
 namespace fs = std::filesystem;
 string storagePath = "MiniOS_Storage";
 
-string arr[] = { "help", "clear", "exit", "date", "time", "list", "create", "delete", "read", "write", "mkdir", "rmdir", "cd", "pwd", "echo", "find", "history", "calc", "sysinfo"
+string arr[] = { "help", "clear", "exit", "date", "time", "list", "create", "delete", "read", "cat", "mkdir", "rmdir", "cd", "pwd", "echo", "find", "history", "calc", "sysinfo"
 			"version" };
 int n = sizeof(arr) / sizeof(arr[0]);
 
@@ -120,21 +120,13 @@ bool findFile(string fileName) {
 		cout << "Folder found, any file does not exist with this name" << endl;
 	}
 	else if (fs::exists(fullPath)) {
-		//cout << "File found" << endl;
 		return true;
 	}
 	else {
-
-		//cout << "File not found" << endl;
 		return false;
 	}
 
 }
-
-//string getFilePath(string fileName) {
-//	if(fs::exists(fileName)){
-//		return fileName.path
-//}
 
 void clearCommand()
 {
@@ -279,6 +271,38 @@ void handleEchoCommand(string echoCommand) {
 	}
 }
 
+void showFileData(string fileName) {
+	string fullPath = storagePath + "/" + fileName;
+	if (fs::exists(fullPath)) {
+		ifstream file(fullPath);
+		string line;
+
+		while (getline(file, line))
+		{
+			cout << line << endl;
+		}
+
+		file.close();
+	}
+	else {
+		cout << "File not found" << endl;
+	}
+}
+
+void deleteDirectory(string folderName) {
+	string fullPath = storagePath + "/" + folderName;
+	if (folderName == "") {
+		cout << "error: file name is missing" << endl;
+	}
+	if (fs::is_directory(fullPath)) {
+		fs::remove(fullPath);
+		cout << "folder deleted successfully!" << endl;
+	}
+	else {
+		cout << "error: folder not found" << endl;
+	}
+}
+
 void showInvalidCommand(string command) {
 	cout << "'" << command << "'" << " is not recognized as an internal or external command" << endl;
 }
@@ -349,6 +373,16 @@ void checkCommand(string command) {
 	else if (command.substr(0, 5) == "echo ") {
 		string echoString = command.substr(5);
 		handleEchoCommand(echoString);
+		cout << endl;
+	}
+	else if (command.substr(0, 4) == "cat ") {
+		string fileName = command.substr(4);
+		showFileData(fileName);
+		cout << endl;
+	}
+	else if (command.substr(0, 6) == "mrdir ") {
+		string folderName = command.substr(6);
+		deleteDirectory(folderName);
 		cout << endl;
 	}
 	else {
