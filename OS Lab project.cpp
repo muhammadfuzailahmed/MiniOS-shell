@@ -6,6 +6,7 @@
 using namespace std;
 
 namespace fs = std::filesystem;
+string storagePath = "MiniOS_Storage";
 
 string arr[] = { "help", "clear", "exit", "date", "time", "list", "create", "delete", "read", "write", "mkdir", "rmdir", "cd", "pwd", "echo", "find", "history", "calc", "sysinfo"
 			"version" };
@@ -70,16 +71,28 @@ void generateRandomNumber() {
 
 void handlemkdir(string command) {
 	string folderName = command.substr(6);
+	string fullPath = storagePath + "/" + folderName;
 
 	if (folderName == "") {
 		cout << "error: folder name is missing" << endl;
 	}
-	else if (fs::exists(folderName)) {
+	else if (fs::exists(fullPath)) {
 		cout << "error: folder already exists with same name." << endl;
 	}
 	else {
-		fs::create_directory(folderName);
+		fs::create_directory(fullPath);
 		cout << "Folder created successfully!" << endl;
+	}
+}
+
+void showFolderAndFiles() {
+	for (const auto& item : fs::directory_iterator(storagePath)) {
+		if (fs::is_directory(item)) {
+			cout << "[FOLDER]: " << item.path().filename().string() << endl;
+		}
+		else {
+			cout << "[FILE]: " << item.path().filename().string() << endl;
+		}
 	}
 }
 
@@ -110,6 +123,10 @@ void checkCommand(string command) {
 		handlemkdir(command);
 		cout << endl;
 	}
+	else if (command == "list") {
+		showFolderAndFiles();
+		cout << endl;
+	}
 	else {
 		showInvalidCommand(command);
 		cout << endl;
@@ -119,8 +136,9 @@ void checkCommand(string command) {
 int main()
 {
 	srand(time(0));
+	fs::create_directory(storagePath);
 	cout << "====================================================================================================================================" << endl;
-    cout << "\t\t\t\t\t\tMiniOS Shell" << endl;
+	cout << "\t\t\t\t\t\tMiniOS Shell" << endl;
 	cout << "====================================================================================================================================" << endl;
 	cout << "Type 'help' to see available commands" << endl;
 	cout << "type 'exit' to exit MiniOS shell" << endl;
@@ -137,4 +155,4 @@ int main()
 			checkCommand(command);
 		}
 	} while (command != "exit");
-}
+};
