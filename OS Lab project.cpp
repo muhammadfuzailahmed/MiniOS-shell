@@ -4,6 +4,7 @@
 #include <ctime>
 #include <filesystem>
 #include <fstream>
+#include <iomanip>
 using namespace std;
 
 namespace fs = std::filesystem;
@@ -128,11 +129,79 @@ void findFile(string fileName) {
 
 void clearCommand()
 {
-#ifdef _WIN32
-	system("cls");
-#else
-	system("clear");
-#endif
+	#ifdef _WIN32
+		system("cls");
+	#else
+		system("clear");
+	#endif	
+}
+
+void about() {
+	cout << R"(=================================
+MiniOS Shell
+Version: 1.0
+=================================
+
+MiniOS Shell is a custom command-line interpreter
+developed as an Operating Systems project.
+
+Features:
+- Command Interpreter
+- File Creation and Deletion
+- Folder Creation
+- File Search
+- Directory Listing
+- Calculator Utility
+
+Developed using C++ and Visual Studio 2022.
+=================================
+)" << endl;
+}
+
+void showDate() {
+	time_t now = time(0);
+	tm localTime;
+
+	localtime_s(&localTime, &now);
+
+	cout << "Date: "
+		<< localTime.tm_mday << "/"
+		<< localTime.tm_mon + 1 << "/"
+		<< localTime.tm_year + 1900
+		<< endl;
+}
+
+void showTime() {
+	time_t now = time(0);
+	tm localTime;
+
+	localtime_s(&localTime, &now);
+
+	int hour = localTime.tm_hour;
+	string period;
+
+	if (hour >= 12)
+	{
+		period = "PM";
+	}
+	else
+	{
+		period = "AM";
+	}
+
+	if (hour == 0)
+	{
+		hour = 12;
+	}
+	else if (hour > 12)
+	{
+		hour = hour - 12;
+	}
+
+	cout << "Time: "
+		<< hour << ":"
+		<< setw(2) << setfill('0') << localTime.tm_min
+		<< period << endl;
 }
 
 void showInvalidCommand(string command) {
@@ -179,7 +248,18 @@ void checkCommand(string command) {
 	else if (command == "clear")
 	{
 		clearCommand();
+	}
+	else if (command == "about") {
+		about();
 		cout << endl;
+	}
+
+	else if (command == "date") {
+		showDate();
+	}
+
+	else if (command == "time") {
+		showTime();
 	}
 	else {
 		showInvalidCommand(command);
