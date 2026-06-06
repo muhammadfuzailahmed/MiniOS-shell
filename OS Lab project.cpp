@@ -126,6 +126,15 @@ void findFile(string fileName) {
 	}
 }
 
+void clearCommand()
+{
+#ifdef _WIN32
+	system("cls");
+#else
+	system("clear");
+#endif
+}
+
 void showInvalidCommand(string command) {
 	cout << "'" << command << "'" << " is not recognized as an internal or external command" << endl;
 }
@@ -167,6 +176,11 @@ void checkCommand(string command) {
 		findFile(fileName);
 		cout << endl;
 	}
+	else if (command == "clear")
+	{
+		clearCommand();
+		cout << endl;
+	}
 	else {
 		showInvalidCommand(command);
 		cout << endl;
@@ -189,6 +203,7 @@ int main()
 		cout << "MiniOs> ";
 		getline(cin, command);
 		if (command == "exit") {
+			cout << "Exiting MiniOS shell..." << endl;
 			break;
 		}
 		else {
