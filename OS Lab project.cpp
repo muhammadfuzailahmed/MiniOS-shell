@@ -3,6 +3,7 @@
 #include <cstdlib>
 #include <ctime>
 #include <filesystem>
+#include <fstream>
 using namespace std;
 
 namespace fs = std::filesystem;
@@ -96,6 +97,22 @@ void showFolderAndFiles() {
 	}
 }
 
+void handleCreateFileCommand(string fileName) {
+	string fullPath = storagePath + "/" + fileName;
+	if (fileName == "") {
+		cout << "error: file name is missing" << endl;
+	}
+	else if (fs::exists(fullPath)) {
+		cout << "error: file already exists with same name." << endl;
+	}
+	else {
+		ofstream file(fullPath);
+		file.close();
+
+		cout << "File created successfully!" << endl;
+	}
+}
+
 void showInvalidCommand(string command) {
 	cout << "'" << command << "'" << " is not recognized as an internal or external command" << endl;
 }
@@ -127,6 +144,11 @@ void checkCommand(string command) {
 		showFolderAndFiles();
 		cout << endl;
 	}
+	else if (command.substr(0, 7) == "create ") {
+		string fileName = command.substr(7);
+		handleCreateFileCommand(fileName);
+		cout << endl;
+	}
 	else {
 		showInvalidCommand(command);
 		cout << endl;
@@ -137,9 +159,9 @@ int main()
 {
 	srand(time(0));
 	fs::create_directory(storagePath);
-	cout << "====================================================================================================================================" << endl;
+	cout << "========================================================================================================================" << endl;
 	cout << "\t\t\t\t\t\tMiniOS Shell" << endl;
-	cout << "====================================================================================================================================" << endl;
+	cout << "========================================================================================================================" << endl;
 	cout << "Type 'help' to see available commands" << endl;
 	cout << "type 'exit' to exit MiniOS shell" << endl;
 	cout << endl;
