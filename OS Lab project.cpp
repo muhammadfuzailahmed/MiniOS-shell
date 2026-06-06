@@ -303,6 +303,25 @@ void deleteDirectory(string folderName) {
 	}
 }
 
+void showSysInfo()
+{
+	cout << "System Information" << endl;
+	cout << "------------------" << endl;
+	cout << "Shell Name      : MiniOS Shell" << endl;
+	cout << "Version         : 1.0" << endl;
+	cout << "Project Type    : Operating Systems Mini Project" << endl;
+	cout << "Language        : C++" << endl;
+	cout << "Compiler/IDE    : Visual Studio 2022" << endl;
+
+#ifdef _WIN32
+	cout << "Platform        : Windows" << endl;
+#else
+	cout << "Platform        : Linux/Mac" << endl;
+#endif
+
+	cout << "Storage Folder  : " << storagePath << endl;
+}
+
 void showInvalidCommand(string command) {
 	cout << "'" << command << "'" << " is not recognized as an internal or external command" << endl;
 }
@@ -380,9 +399,13 @@ void checkCommand(string command) {
 		showFileData(fileName);
 		cout << endl;
 	}
-	else if (command.substr(0, 6) == "mrdir ") {
+	else if (command.substr(0, 6) == "rmdir ") {
 		string folderName = command.substr(6);
 		deleteDirectory(folderName);
+		cout << endl;
+	}
+	else if (command == "sysinfo") {
+		showSysInfo();
 		cout << endl;
 	}
 	else {
