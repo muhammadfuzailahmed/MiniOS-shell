@@ -113,6 +113,19 @@ void handleCreateFileCommand(string fileName) {
 	}
 }
 
+void findFile(string fileName) {
+	string fullPath = storagePath + "/" + fileName;
+	if (fs::is_directory(fullPath)) {
+		cout << "Folder found, any file does not exist with this name" << endl;
+	}
+	else if (fs::exists(fullPath)) {
+		cout << "File found" << endl;
+	}
+	else {
+		cout << "File not found" << endl;
+	}
+}
+
 void showInvalidCommand(string command) {
 	cout << "'" << command << "'" << " is not recognized as an internal or external command" << endl;
 }
@@ -147,6 +160,11 @@ void checkCommand(string command) {
 	else if (command.substr(0, 7) == "create ") {
 		string fileName = command.substr(7);
 		handleCreateFileCommand(fileName);
+		cout << endl;
+	}
+	else if (command.substr(0, 5) == "find ") {
+		string fileName = command.substr(5);
+		findFile(fileName);
 		cout << endl;
 	}
 	else {
