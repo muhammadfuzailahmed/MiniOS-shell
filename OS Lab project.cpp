@@ -114,18 +114,27 @@ void handleCreateFileCommand(string fileName) {
 	}
 }
 
-void findFile(string fileName) {
+bool findFile(string fileName) {
 	string fullPath = storagePath + "/" + fileName;
 	if (fs::is_directory(fullPath)) {
 		cout << "Folder found, any file does not exist with this name" << endl;
 	}
 	else if (fs::exists(fullPath)) {
-		cout << "File found" << endl;
+		//cout << "File found" << endl;
+		return true;
 	}
 	else {
-		cout << "File not found" << endl;
+
+		//cout << "File not found" << endl;
+		return false;
 	}
+
 }
+
+//string getFilePath(string fileName) {
+//	if(fs::exists(fileName)){
+//		return fileName.path
+//}
 
 void clearCommand()
 {
@@ -204,6 +213,72 @@ void showTime() {
 		<< period << endl;
 }
 
+void deleteFile(string fileName) {
+	string fullPath = storagePath + "/" + fileName;
+	if (fileName == "") {
+		cout << "error: file name is missing" << endl;
+	}
+
+	else if (fs::exists(fullPath)) {
+		fs::remove(fullPath);
+		cout << "File deleted successfully!" << endl;
+	}
+	else {
+		cout << "File not found!" << endl;
+	}
+}
+
+void writeDataToFile(string data, string fileName) {
+	string fullPath = storagePath + "/" + fileName;
+	ofstream file(fullPath);
+	file << data << endl;
+	file.close();
+}
+
+void appendDataToFile(string data, string fileName) {
+	string fullPath = storagePath + "/" + fileName;
+	ofstream file(fullPath, ios::app);
+	file << data << endl;
+	file.close();
+}
+
+void handleEchoCommand(string echoCommand) {
+	if (echoCommand.find(">>") != string::npos) {
+		int firstQuote = echoCommand.find('"');
+		int secondQuote = echoCommand.find('"', firstQuote + 1);
+
+		string message = echoCommand.substr(firstQuote + 1, secondQuote - firstQuote - 1);
+		int index = echoCommand.find(">>");
+		string fileName = echoCommand.substr(index + 3);
+		if (findFile(fileName)) {
+			appendDataToFile(message, fileName);
+		}
+		else {
+			cout << "File not found" << endl;
+		}
+	}
+	else if (echoCommand.find('>') != string::npos) {
+		int firstQuote = echoCommand.find('"');
+		int secondQuote = echoCommand.find('"', firstQuote + 1);
+
+		string message = echoCommand.substr(firstQuote + 1, secondQuote - firstQuote - 1);
+		int index = echoCommand.find('>');
+		string fileName = echoCommand.substr(index + 2);
+		if (findFile(fileName)) {
+			writeDataToFile(message, fileName);
+		}
+		else {
+			cout << "File not found" << endl;
+		}
+	}
+	else if (echoCommand == "") {
+		cout << "error: data is missing" << endl;
+	}
+	else {
+		cout << echoCommand << endl;
+	}
+}
+
 void showInvalidCommand(string command) {
 	cout << "'" << command << "'" << " is not recognized as an internal or external command" << endl;
 }
@@ -242,7 +317,14 @@ void checkCommand(string command) {
 	}
 	else if (command.substr(0, 5) == "find ") {
 		string fileName = command.substr(5);
-		findFile(fileName);
+		bool result = findFile(fileName);
+		if (result) {
+			cout << "File found" << endl;
+		}
+		else {
+			cout << "File not found" << endl;
+			
+		}
 		cout << endl;
 	}
 	else if (command == "clear")
@@ -253,13 +335,21 @@ void checkCommand(string command) {
 		about();
 		cout << endl;
 	}
-
 	else if (command == "date") {
 		showDate();
 	}
-
 	else if (command == "time") {
 		showTime();
+	}
+	else if (command.substr(0, 7) == "delete ") {
+		string deleteFileName = command.substr(7);
+		deleteFile(deleteFileName);
+		cout << endl;
+	}
+	else if (command.substr(0, 5) == "echo ") {
+		string echoString = command.substr(5);
+		handleEchoCommand(echoString);
+		cout << endl;
 	}
 	else {
 		showInvalidCommand(command);
