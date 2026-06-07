@@ -383,6 +383,21 @@ void showCurrentDirectory()
 	cout << "Current Directory: " << storagePath << endl;
 }
 
+void pwd() {
+	cout << storagePath << endl;
+}
+
+void whereFile(string whereString) {
+	string fullpath = storagePath + "/" + whereString;
+	if (fs::exists(fullpath)) {
+		cout << storagePath << endl;
+	}
+	else {
+		cout << "error: file not found!";
+
+	}
+}
+
 void showInvalidCommand(string command) {
 	cout << "'" << command << "'" << " is not recognized as an internal or external command" << endl;
 }
@@ -478,6 +493,11 @@ void checkCommand(string command) {
 	}
 	else if (command == "pwd") {
 		showCurrentDirectory();
+		cout << endl;
+	}
+	else if (command.substr(0, 6) == "where ") {
+		string whereString = command.substr(6);
+		whereFile(whereString);
 		cout << endl;
 	}
 	else {
