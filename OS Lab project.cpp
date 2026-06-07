@@ -10,7 +10,16 @@ using namespace std;
 namespace fs = std::filesystem;
 string storagePath = "MiniOS_Storage";
 
-string arr[] = { "help", "clear", "exit", "date", "time", "list", "create", "delete", "read", "cat", "mkdir", "rmdir", "cd", "pwd", "echo", "find", "history", "calc", "sysinfo"
+struct HistoryNode
+{
+	string cmd;
+	HistoryNode* next;
+};
+
+HistoryNode* historyHead = NULL;
+HistoryNode* historyTail = NULL;
+
+string arr[] = { "help", "clear", "exit", "date", "time", "list", "create", "delete", "read", "cat", "mkdir", "rmdir", "cd", "pwd", "echo", "find", "history", "calc", "sysinfo",
 			"version" };
 int n = sizeof(arr) / sizeof(arr[0]);
 
@@ -322,6 +331,58 @@ void showSysInfo()
 	cout << "Storage Folder  : " << storagePath << endl;
 }
 
+void handleHistory(string user_command)
+{
+	if (user_command == "")
+	{
+		return;
+	}
+
+	HistoryNode* new_cmd = new HistoryNode();
+	new_cmd->cmd = user_command;
+	new_cmd->next = NULL;
+
+	if (historyHead == NULL)
+	{
+		historyHead = new_cmd;
+		historyTail = new_cmd;
+	}
+
+	else
+	{
+		historyTail->next = new_cmd;
+		historyTail = new_cmd;
+	}
+}
+
+void printHistory() {
+	if (historyHead == NULL)
+	{
+		cout << "History is empty." << endl;
+	}
+
+	else if (historyHead == historyTail && historyHead->cmd == "history")
+	{
+		cout << "1 " << historyHead->cmd << endl;
+	}
+	else
+	{
+		HistoryNode* current = historyHead;
+		int counter = 1;
+		while (current != NULL)
+		{
+			cout << counter << " " << current->cmd << endl;
+			current = current->next;
+			counter++;
+		}
+	}
+}
+
+void showCurrentDirectory()
+{
+	cout << "Current Directory: " << storagePath << endl;
+}
+
 void showInvalidCommand(string command) {
 	cout << "'" << command << "'" << " is not recognized as an internal or external command" << endl;
 }
@@ -380,9 +441,11 @@ void checkCommand(string command) {
 	}
 	else if (command == "date") {
 		showDate();
+		cout << endl;
 	}
 	else if (command == "time") {
 		showTime();
+		cout << endl;
 	}
 	else if (command.substr(0, 7) == "delete ") {
 		string deleteFileName = command.substr(7);
@@ -408,6 +471,15 @@ void checkCommand(string command) {
 		showSysInfo();
 		cout << endl;
 	}
+	else if (command == "history")
+	{
+		printHistory();
+		cout << endl;
+	}
+	else if (command == "pwd") {
+		showCurrentDirectory();
+		cout << endl;
+	}
 	else {
 		showInvalidCommand(command);
 		cout << endl;
@@ -429,6 +501,7 @@ int main()
 	{
 		cout << "MiniOs> ";
 		getline(cin, command);
+		handleHistory(command);
 		if (command == "exit") {
 			cout << "Exiting MiniOS shell..." << endl;
 			break;
