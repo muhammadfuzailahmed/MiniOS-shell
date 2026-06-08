@@ -25,7 +25,7 @@ struct HistoryNode
 HistoryNode* historyHead = NULL;
 HistoryNode* historyTail = NULL;
 
-string arr[] = { "help", "clear", "exit", "date", "time", "list", "create", "delete", "read", "cat", "mkdir", "rmdir", "cd", "pwd", "echo", "find", "history", "calc", "sysinfo",
+string arr[] = { "help", "clear", "exit", "date", "time", "list", "create", "delete", "read", "cat", "mkdir", "rmdir", "where", "pwd", "echo", "find", "history", "calc", "sysinfo",
             "version" };
 int n = sizeof(arr) / sizeof(arr[0]);
 
